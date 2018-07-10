@@ -5,4 +5,5 @@ from __future__ import absolute_import
 #  
 #  Description: alpskit project. alpskit package init file.
 # 
+"""alpskit project. alpskit package."""
 from ._strtool import *
