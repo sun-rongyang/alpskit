@@ -5,82 +5,109 @@
 #  Description: alpskit project. Module for data collection and
 #               format conversion.
 # 
-import pyalps
-
 import json
 
 import numpy as np
 
-def data_set_to_jss(data_set):
-  """Convert DataSet obj to a json string.
 
-  :data_set: pyalps.DataSet
+class MeasuData(object):
+  """ A class initialize to contain measurement data, ref ALPS pyalps.DataSet """
+
+  def __init__(self, x=None, y=None, props=None):
+    """ use x, y, props data to initialize a MeasuData instance
+
+        :x: x domain data, any object
+        :y: y domain data, any object
+        :props: properties dict
+
+        """
+    self.x = x
+    self.y = y
+    if props == None:
+      self.props = {}
+    else:
+      self.props = props
+
+  # Use a pyalps.DataSet instance to initialize a MeasuData instance.
+  # Usage: measu_data = MeasuData.from_DataSet(data_set)
+  @classmethod
+  def from_DataSet(cls, data_set):
+    x = data_set.x
+    y = data_set.y
+    props = data_set.props
+    return cls(x, y, props)
+
+
+def measu_data_to_jss(data_set):
+  """Convert MeasuData obj to a json string.
+
+  :data_set: MeasuData
   :returns: str
       JSON object string.
 
   """
-  return json.dumps(data_set, cls=DataSetJSONEncoder, indent=2)
+  return json.dumps(data_set, cls=MeasuDataJSONEncoder, indent=2)
 
 
-def jss_to_data_set(jss):
-  """Convert js string to a DataSet obj.
+def jss_to_measu_data(jss):
+  """Convert js string to a MeasuData obj.
 
   :jss: str
       JSON formatted string.
-  :returns: pyals.DataSet
+  :returns: MeasuData
 
   """
-  return json.loads(jss, cls=DataSetJSONDecoder)
+  return json.loads(jss, cls=MeasuDataJSONDecoder)
 
 
-def data_set_to_js(data_set, js):
-  """Convert DataSet obj to a json string and save to json file.
+def measu_data_to_js(measu_data, js):
+  """Convert MeasuData obj to a json string and save to json file.
 
-  :data_set: pyalps.DataSet
+  :measu_data: MeasuData
   :js: str
       JSON file name.
   :returns: int
       0
 
   """
-  jss = data_set_to_jss(data_set)
+  jss = measu_data_to_jss(measu_data)
   with open(js, 'w') as fp:
     fp.write(jss)
   return 0
 
 
-def js_to_data_set(js):
-  """TODO: Docstring for js_to_data_set.
+def js_to_measu_data(js):
+  """Load JSON file and convert to MeasuData obj if possible.
 
   :js: str
       JSON file name.
-  :returns: TODO
+  :returns: MeasuData
 
   """
   with open(js, 'r') as fp:
     jss = fp.read()
-  return jss_to_data_set(jss)
+  return jss_to_measu_data(jss)
   
   
 
 
-class DataSetJSONEncoder(json.JSONEncoder):
-  # Override the default method to encode DataSet obj.
+class MeasuDataJSONEncoder(json.JSONEncoder):
+  # Override the default method to encode MeasuData obj.
   def default(self, obj):
-    if isinstance(obj, pyalps.DataSet):
+    if isinstance(obj, MeasuData):
       x = obj.x
       y = obj.y
       props = obj.props
       if isinstance(x, np.ndarray): x = x.tolist()
       if isinstance(y, np.ndarray): y = y.tolist()
-      return {'DataSet': [{'x': x},
-                          {'y': y},
-                          {'props': props}]}
+      return {'MeasuData': [{'x': x},
+                            {'y': y},
+                            {'props': props}]}
     else:
       return super().default(self, obj)
 
 
-class DataSetJSONDecoder(json.JSONDecoder):
+class MeasuDataJSONDecoder(json.JSONDecoder):
   def __init__(self, *args, **kwargs):
     # create object_hook method to decode DataSet object.
     json.JSONDecoder.__init__(self,
@@ -89,9 +116,9 @@ class DataSetJSONDecoder(json.JSONDecoder):
                               **kwargs)
 
   def object_hook(self, obj):
-    if 'DataSet' not in obj:
+    if 'MeasuData' not in obj:
       return obj
-    data_set_list = obj['DataSet']
-    return pyalps.DataSet(x=np.array(data_set_list[0]['x']),
-                          y=np.array(data_set_list[1]['y']),
-                          props=data_set_list[2]['props'])
+    data_set_list = obj['MeasuData']
+    return MeasuData(x=np.array(data_set_list[0]['x']),
+                     y=np.array(data_set_list[1]['y']),
+                     props=data_set_list[2]['props'])
