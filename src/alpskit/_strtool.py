@@ -59,6 +59,7 @@ def get_folder(name_str):
   folder_levels = ns.split('/')[:-1]
   return '/'.join(folder_levels)
 
+
 def _get_name_snippet(paras, key):
   name_snippet = key.replace('_', '')
   try:
