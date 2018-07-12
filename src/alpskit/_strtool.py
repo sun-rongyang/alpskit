@@ -4,6 +4,7 @@
 #  
 #  Description: alpskit project. Private module to manipulate strings.
 # 
+from collections import OrderedDict
 
 
 def gen_basename(paras, keys=[],  suffix=''):
@@ -58,6 +59,60 @@ def get_folder(name_str):
   if '/' not in ns: return '.'
   folder_levels = ns.split('/')[:-1]
   return '/'.join(folder_levels)
+
+
+def getlabel(measu_data, keys):
+  """Get label string from a MeasuData obj with format:
+     'key1=val1 key2=val2 key3=val3'
+
+    :measu_data: MeasuData obj
+        Contain measurement data.
+    :keys: str or list
+        A (list of ) str, each one is an item of the label.
+    :returns: str
+        The label string.
+
+    """
+  if not isinstance(keys, list):
+    keys = [keys]
+  label = ''
+  for key in keys:
+    try:
+      label += key + '=' + str(measu_data.props[key]) + ' '
+    except KeyError:
+      label += key + '=' + 'None' + ' '
+
+  return label
+
+
+def get_fig_name(measu_data, keys):
+  """Get figure name string from MeasuData obj(s) with the format:
+     'key1=val1_key2=val21~val22_key3=val3'
+
+    :measu_data: alpskit.data.MeasuData
+    :keys: list
+        A list of keys to generate figure name.
+    :returns: str
+        Figure name string.
+
+    """
+  if not isinstance(measu_data, list): measu_data = [measu_data]
+  if not isinstance(keys, list): keys = [keys]
+  paras_dict = OrderedDict()
+  for key in keys:
+    paras_dict[key] = []
+    for case in measu_data:
+      paras_dict[key].append(
+          str(case.props[key]).replace(' ', '').replace('_', ''))
+  for key, value in paras_dict.items():
+    if value[1:] == value[:-1]:
+      paras_dict[key] = [value[0]]
+  fig_name_list = []
+  for key, value in paras_dict.items():
+    para_item = '~'.join(value)
+    fig_name_list.append(key + '=' + para_item)
+
+  return ('_'.join(fig_name_list)).replace('.', '_')
 
 
 def _get_name_snippet(paras, key):
