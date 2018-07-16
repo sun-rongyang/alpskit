@@ -116,7 +116,7 @@ def get_fig_name(measu_data, keys):
 
 
 def _get_name_snippet(paras, key):
-  name_snippet = key.replace('_', '')
+  name_snippet_key = key.replace('_', '')
   try:
     val_pre = str(paras[key])
     if ' ' in val_pre:
@@ -131,6 +131,6 @@ def _get_name_snippet(paras, key):
       val = ''.join(snips)
     else:
       val = val_pre.replace('_', '')
-    return name_snippet +'='+ val
+    return name_snippet_key +'='+ val
   except KeyError:
-    return name_snippet +'='+ 'TBA'
+    return name_snippet_key +'='+ 'TBA'
