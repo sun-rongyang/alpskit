@@ -103,7 +103,7 @@ def get_fig_name(measu_data, keys):
     paras_dict[key] = []
     for case in measu_data:
       paras_dict[key].append(
-          str(case.props[key]).replace(' ', '').replace('_', ''))
+          _get_shrunken_name_snippet_val(str(case.props[key])).replace('_', ''))
   for key, value in paras_dict.items():
     if value[1:] == value[:-1]:
       paras_dict[key] = [value[0]]
@@ -118,19 +118,23 @@ def get_fig_name(measu_data, keys):
 def _get_name_snippet(paras, key):
   name_snippet_key = key.replace('_', '')
   try:
-    val_pre = str(paras[key])
-    if ' ' in val_pre:
-      val_split = val_pre.split(' ')
-      if len(val_pre.replace(' ', '')) > 7:
-        snips = []
-        for snip in val_split:
-          if len(snip) > 3:
-            snips.append(snip[0:3])
-          else:
-            snips.append(snip)
-      val = ''.join(snips)
-    else:
-      val = val_pre.replace('_', '')
+    val = _get_shrunken_name_snippet_val(str(paras[key]))
     return name_snippet_key +'='+ val
   except KeyError:
     return name_snippet_key +'='+ 'TBA'
+
+
+def _get_shrunken_name_snippet_val(raw_str, max_len=7):
+  if ' ' in raw_str:
+    snips = raw_str.split(' ')
+    if len(raw_str.replace(' ', '')) > max_len:
+      shrunken_snips = []
+      for snip in snips:
+        if len(snip) > 3:
+          shrunken_snips.append(snip[0:3])
+        else:
+          shrunken_snips.append(snip)
+      return ''.join(shrunken_snips)
+    return ''.join(snips)
+  else:
+    return raw_str.replace('_', '')
