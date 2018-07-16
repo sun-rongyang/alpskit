@@ -110,4 +110,4 @@ venv.bak/
 /.tmp/
 .DS_Store
 *.swp
-/src/alpskit/third_party/
+/src/alpskit/third_party/[!__]*.py
