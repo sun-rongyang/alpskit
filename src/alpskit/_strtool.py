@@ -87,7 +87,9 @@ def getlabel(measu_data, keys):
 
 def get_fig_name(measu_data, keys):
   """Get figure name string from MeasuData obj(s) with the format:
-     'key1=val1_key2=val21~val22_key3=val3'
+     'key1=val1_key2=val21-val22_key3=val3'
+     '_' and '-' in val# are removed.
+     '.' in the final fig name string are also removed.
 
     :measu_data: alpskit.data.MeasuData
     :keys: list
@@ -103,13 +105,14 @@ def get_fig_name(measu_data, keys):
     paras_dict[key] = []
     for case in measu_data:
       paras_dict[key].append(
-          _get_shrunken_name_snippet_val(str(case.props[key])).replace('_', ''))
+          _get_shrunken_name_snippet_val(str(case.props[key]))
+          .replace('_', '').replace('-', ''))
   for key, value in paras_dict.items():
     if value[1:] == value[:-1]:
       paras_dict[key] = [value[0]]
   fig_name_list = []
   for key, value in paras_dict.items():
-    para_item = '~'.join(value)
+    para_item = '-'.join(value)
     fig_name_list.append(key + '=' + para_item)
 
   return ('_'.join(fig_name_list)).replace('.', '_')
