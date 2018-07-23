@@ -111,3 +111,7 @@ venv.bak/
 .DS_Store
 *.swp
 /src/alpskit/third_party/[!__]*.py
+/src/alpskit/third_party/.git/
+/src/alpskit/third_party/.gitignore
+
+
