@@ -31,3 +31,9 @@ class TestStringTools(unittest.TestCase):
                      'foo')
     str3 = 'foo.bar'
     self.assertEqual(alpskit.get_folder(str3), '.')
+
+  def test_getlabel(self):
+    measu_data1 = alpskit.MeasuData(props={'key1': 'val1', 'key2': 'val2'})
+    keys = ['key1', 'key2']
+    self.assertEqual(alpskit.getlabel(measu_data1, keys),
+                     'key1=val1 key2=val2 ')
