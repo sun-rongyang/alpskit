@@ -7,6 +7,8 @@
 import unittest
 import alpskit.data as data
 
+import os
+
 import numpy as np
 
 
@@ -35,6 +37,22 @@ class TestMeasuDataFuncs(unittest.TestCase):
     self.assertEqual(measu_data1_gt.props, measu_data1.props)
 
 
+class TestPropsFuncs(unittest.TestCase):
+  def setUp(self):
+    self.case1 = './key1=1_key2=0.3_key3=1e-5_key4=str_suffix'
+    os.mkdir(self.case1)
+
+  def test_get_props(self):
+    props_dict = data.get_props(self.case1)
+    self.assertEqual(props_dict,
+                     {'key1':   1,
+                      'key2':   0.3,
+                      'key3':   1e-5,
+                      'key4':   'str',
+                      'suffix': 'suffix'})
+  
+  def tearDown(self):
+    os.rmdir(self.case1)
 
 if __name__ == '__main__':
   unittest.main()

@@ -5,6 +5,9 @@
 #  Description: alpskit project. Module for data collection and
 #               format conversion.
 # 
+from ._strtool import basename2dict, get_folder
+
+import os
 import json
 
 import numpy as np
@@ -89,6 +92,19 @@ def js_to_measu_data(js):
   return jss_to_measu_data(jss)
   
   
+def get_props(case_dir):
+  """Get props dict for given simulation case results.
+
+  :case_dir: TODO
+  :returns: TODO
+
+  """
+  try:
+    with open(case_dir+'/props.json', 'r') as fp:
+      props_dict = json.load(fp)
+      return props_dict['props']
+  except IOError:
+    return basename2dict(os.path.basename(case_dir))
 
 
 class MeasuDataJSONEncoder(json.JSONEncoder):
