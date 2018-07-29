@@ -7,3 +7,4 @@ from __future__ import absolute_import
 # 
 """alpskit project. alpskit package."""
 from ._strtool import *
+from .data import *
