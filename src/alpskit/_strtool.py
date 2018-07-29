@@ -5,6 +5,7 @@
 #  Description: alpskit project. Private module to manipulate strings.
 # 
 from collections import OrderedDict
+import json
 
 
 def gen_basename(paras, keys=[],  suffix=''):
@@ -116,6 +117,56 @@ def get_fig_name(measu_data, keys):
     fig_name_list.append(key + '=' + para_item)
 
   return ('_'.join(fig_name_list)).replace('.', '_')
+
+
+def basename2dict(bn):
+  """Switch formatted basename like 'key1=val1_key2=val2' to a dict:
+     {'key1':val1, 'key2':val2}
+
+  :bn: str
+      Formatted basename string.
+  :returns: dict
+      The switched dict.
+
+  """
+  tmp_list = bn.split('_')
+  if '=' not in tmp_list[-1]:
+    tmp_list[-1] = 'suffix' +'='+ tmp_list[-1]
+  key_val_dict = {}
+  for key_val in tmp_list:
+    key_val_list = key_val.split('=')
+    key = key_val_list[0]
+    val = key_val_list[1]
+    try:
+      val = int(val)
+    except ValueError:
+      try:
+        val = float(val)
+      except ValueError:
+        val = str(val)
+    key_val_dict[key] = val
+  return key_val_dict
+
+
+def basename2jss(bn, key):
+  """Switch a formatted basename like 'key1=val1_key2=val2' to a JSON string
+     with 2 spaces indent:
+
+        {
+          key: {
+            "key1": val1,
+            "key2": val2
+          }
+        }
+
+  :bn: str
+      Formatted basename string.
+  :key: The leader key.
+  :returns: TODO
+
+  """
+  bn_dict = basename2dict(bn)
+  return json.dumps({key: bn_dict}, indent=2)
 
 
 def _get_name_snippet(paras, key):
