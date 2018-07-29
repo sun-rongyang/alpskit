@@ -57,7 +57,16 @@ class TestStringTools(unittest.TestCase):
                       'key2':   0.3,
                       'key3':   1e-5,
                       'key4':   'str',
-                      'suffix': 'suffix'})
+                      '#0': 'suffix'})
+    basename3 = basename2 + '_suffix1'
+    dict3 = alpskit.basename2dict(basename3)
+    self.assertEqual(dict3,
+                     {'key1':   1,
+                      'key2':   0.3,
+                      'key3':   1e-5,
+                      'key4':   'str',
+                      '#0': 'suffix',
+                      '#1': 'suffix1'})
 
   def test_basename2jss(self):
     basename = 'key1=1_key2=0.3_key3=1e-5_key4=str'

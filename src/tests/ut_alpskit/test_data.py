@@ -49,7 +49,7 @@ class TestPropsFuncs(unittest.TestCase):
                       'key2':   0.3,
                       'key3':   1e-5,
                       'key4':   'str',
-                      'suffix': 'suffix'})
+                      '#0': 'suffix'})
   
   def tearDown(self):
     os.rmdir(self.case1)

@@ -130,10 +130,12 @@ def basename2dict(bn):
 
   """
   tmp_list = bn.split('_')
-  if '=' not in tmp_list[-1]:
-    tmp_list[-1] = 'suffix' +'='+ tmp_list[-1]
+  nokey_num = 0   # Initialize non-key item number.
   key_val_dict = {}
   for key_val in tmp_list:
+    if '=' not in key_val:
+      key_val = '#{0}'.format(nokey_num) +'='+ key_val
+      nokey_num += 1
     key_val_list = key_val.split('=')
     key = key_val_list[0]
     val = key_val_list[1]
