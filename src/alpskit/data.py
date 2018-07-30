@@ -9,6 +9,7 @@ from ._strtool import basename2dict, get_folder
 
 import os
 import json
+import subprocess
 
 import numpy as np
 
@@ -95,8 +96,10 @@ def js_to_measu_data(js):
 def get_props(case_dir):
   """Get props dict for given simulation case results.
 
-  :case_dir: TODO
-  :returns: TODO
+  :case_dir: str
+      Simulation case directory.
+  :returns: dict
+      props dict.
 
   """
   try:
@@ -105,6 +108,26 @@ def get_props(case_dir):
       return props_dict['props']
   except IOError:
     return basename2dict(os.path.basename(case_dir))
+
+
+def get_chkp_dirs(case_dir):
+  """Get *.chkp diectories from simulation case path.
+
+  :case_dir: str
+      Simulation case directory.
+  :returns: list
+      Each item is a chkp directory in the given simulation case.
+
+  """
+  cmd = ['ls', case_dir]
+  stdout = subprocess.check_output(cmd)
+  try:
+    contents = stdout.split('\n')
+  except TypeError:
+    contents = (stdout.decode('utf-8')).split('\n')
+  return list(case_dir +'/'+ item
+              for item in contents if item.endswith('.chkp'))
+
 
 
 class MeasuDataJSONEncoder(json.JSONEncoder):

@@ -54,5 +54,29 @@ class TestPropsFuncs(unittest.TestCase):
   def tearDown(self):
     os.rmdir(self.case1)
 
+
+class TestGetDataFiles(unittest.TestCase):
+  def setUp(self):
+    self.case1 = './case1'
+    self.chkp1 = self.case1 + '/case1.out.chkp'
+    os.makedirs(self.chkp1)
+    self.case2 = './case2'
+    self.chkp21 = self.case2 + '/case2.out1.chkp'
+    self.chkp22 = self.case2 + '/case2.out2.chkp'
+    [os.mkdir(dir_) for dir_ in [self.case2,
+                                 self.chkp21,
+                                 self.chkp22]]
+
+  def test_get_chkp_dirs(self):
+    chkps = data.get_chkp_dirs(self.case1)
+    self.assertEqual(chkps, [self.chkp1])
+    chkps = data.get_chkp_dirs(self.case2)
+    self.assertEqual(chkps, [self.chkp21, self.chkp22])
+
+  def tearDown(self):
+    os.removedirs(self.chkp1)
+    [os.removedirs(dir_) for dir_ in [self.chkp21, self.chkp22]]
+
+
 if __name__ == '__main__':
   unittest.main()
