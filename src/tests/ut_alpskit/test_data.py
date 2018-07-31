@@ -57,9 +57,15 @@ class TestPropsFuncs(unittest.TestCase):
 
 class TestGetDataFiles(unittest.TestCase):
   def setUp(self):
+    def touch(fname, times=None):
+      with open(fname, 'a'):
+        os.utime(fname, times)
+     
     self.case1 = './case1'
     self.chkp1 = self.case1 + '/case1.out.chkp'
+    self.h51 = self.case1 + '/case1.out.h5'
     os.makedirs(self.chkp1)
+    touch(self.h51)
     self.case2 = './case2'
     self.chkp21 = self.case2 + '/case2.out1.chkp'
     self.chkp22 = self.case2 + '/case2.out2.chkp'
@@ -73,7 +79,12 @@ class TestGetDataFiles(unittest.TestCase):
     chkps = data.get_chkp_dirs(self.case2)
     self.assertEqual(chkps, [self.chkp21, self.chkp22])
 
+  def test_get_h5_files(self):
+    h5 = data.get_h5_files(self.case1)
+    self.assertEqual(h5, [self.h51])
+
   def tearDown(self):
+    os.remove(self.h51)
     os.removedirs(self.chkp1)
     [os.removedirs(dir_) for dir_ in [self.chkp21, self.chkp22]]
 

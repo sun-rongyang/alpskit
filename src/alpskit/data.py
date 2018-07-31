@@ -119,6 +119,22 @@ def get_chkp_dirs(case_dir):
       Each item is a chkp directory in the given simulation case.
 
   """
+  return _get_files(case_dir, '.chkp')
+
+
+def get_h5_files(case_dir):
+  """Get *.h5 files from simulation case path.
+
+  :case_dir: str
+      Simulation case directory.
+  :returns: list
+      Each item is a h5 file in the given simulation case.
+
+  """
+  return _get_files(case_dir, '.h5')
+
+
+def _get_files(case_dir, suffix):
   cmd = ['ls', case_dir]
   stdout = subprocess.check_output(cmd)
   # Compatibility for py2 and py3.
@@ -127,8 +143,7 @@ def get_chkp_dirs(case_dir):
   except TypeError:
     contents = (stdout.decode('utf-8')).split('\n')
   return list(case_dir +'/'+ item
-              for item in contents if item.endswith('.chkp'))
-
+              for item in contents if item.endswith(suffix))
 
 
 class MeasuDataJSONEncoder(json.JSONEncoder):
