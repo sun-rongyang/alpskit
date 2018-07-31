@@ -121,6 +121,7 @@ def get_chkp_dirs(case_dir):
   """
   cmd = ['ls', case_dir]
   stdout = subprocess.check_output(cmd)
+  # Compatibility for py2 and py3.
   try:
     contents = stdout.split('\n')
   except TypeError:
