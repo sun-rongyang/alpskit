@@ -6,6 +6,7 @@
 # 
 from collections import OrderedDict
 import json
+import os
 
 
 def gen_basename(paras, keys=[],  suffix=''):
@@ -42,7 +43,8 @@ def get_basename(name_str, suffixs=1):
 
   """
   ns = str(name_str)
-  rightmost = ns.split('/')[-1] 
+  rightmost = os.path.basename(ns)
+  if suffixs == 0: return rightmost
   file_name_parts = rightmost.split('.')
   return '.'.join(file_name_parts[:-suffixs])
 

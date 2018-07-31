@@ -21,6 +21,9 @@ class TestStringTools(unittest.TestCase):
     str2 = './for/bar.baz.bax'
     self.assertEqual(alpskit.get_basename(str2, suffixs=2),
                      'bar')
+    str3 = './foo/bar/baz'
+    self.assertEqual(alpskit.get_basename(str3, suffixs=0),
+                     'baz')
 
   def test_get_folder(self):
     str1 = '../foo/bar/basename.suffix'
